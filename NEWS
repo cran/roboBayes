@@ -1,0 +1,8 @@
+VEwaningVariant v1.2 (Release date: 2023-12-13)
+==============
+
+Changes: 
+
+Documentation update to correct itemize/describe; 
+remove C++11 compilation flag; and 
+throttled armadillo cores in examples

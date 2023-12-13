@@ -3,4 +3,5 @@
 export(roboBayes)
 import(Rcpp)
 import(methods)
+importFrom(RcppArmadillo,armadillo_throttle_cores)
 useDynLib(roboBayes)

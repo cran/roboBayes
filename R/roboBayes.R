@@ -15,13 +15,13 @@
 #'
 #' Analysis parameters must obey the following conditions:
 #'   \itemize{
-#'     \item{Lsearch + cp_delay + Lgroup <= truncRmin + 1}{}
-#'     \item{Lwindow + cp_delay + Lgroup <= truncRmin + 1}{}
-#'     \item{Lgroup <= Lwindow + 1}{}
-#'     \item{cptimemin > Lgroup}{}
-#'     \item{cptimemin >= cp_delay - 1}{}
-#'     \item{cp_delay < Lm}{}
-#'     \item{Lsearch <= truncRmin}{}
+#'     \item Lsearch + cp_delay + Lgroup <= truncRmin + 1
+#'     \item Lwindow + cp_delay + Lgroup <= truncRmin + 1
+#'     \item Lgroup <= Lwindow + 1
+#'     \item cptimemin > Lgroup
+#'     \item cptimemin >= cp_delay - 1
+#'     \item cp_delay < Lm
+#'     \item Lsearch <= truncRmin
 #'   }
 #'
 #' @param datapts A matrix object (n x d). The observations for n time points.
@@ -52,18 +52,18 @@
 #' @param par_inits A list object. The initial estimates for the hyperparameters.
 #'   The list can contain one or more of the following:
 #'   \itemize{
-#'   \item{B} {A (k x d) matrix. The location parameter of the matrix Normal.
-#'            The default is a zero matrix.}
+#'   \item B: A (k x d) matrix. The location parameter of the matrix Normal.
+#'            The default is a zero matrix.
 #'
-#'   \item{V} {A (d x d) matrix. The scale matrix of the Inverse Wishart.
+#'   \item V: A (d x d) matrix. The scale matrix of the Inverse Wishart.
 #'            The default is a symmetric matrix with 1.0 on the diagonal and
-#'            0.1 in the off-diagonal elements.}
+#'            0.1 in the off-diagonal elements.
 #'
-#'   \item{nu} {A scalar. The degrees of freedom of the Inverse Wishart.
-#'             The default is (d - 0.9).}
+#'   \item nu: A scalar. The degrees of freedom of the Inverse Wishart.
+#'             The default is (d - 0.9).
 #'
-#'   \item{Lambda} {A (k x k) matrix. The scale parameter of the matrix Normal.
-#'                 The default is a diagonal matrix of 0.01.}}
+#'   \item Lambda: A (k x k) matrix. The scale parameter of the matrix Normal.
+#'                 The default is a diagonal matrix of 0.01.}
 #'
 #' @param truncRthresh A scalar object. A probability threshold used to 
 #'   limit the size of the data used at each time step. Once t > truncRmin,
@@ -132,68 +132,71 @@
 #'
 #' @returns A RoboBayes object, which extends list and contains
 #'   \itemize{
-#'   \item{R} {A numeric vector object. The current posterior distribution of 
-#'            the run length.}
-#'   \item{RL} {An integer vector object. The current run lengths that are 
-#'             retained.}
-#'   \item{truncRind} {An integer vector object. The indices of the run 
-#'                    lengths retained.}
-#'   \item{jtR} {A numeric vector object. The current joint distribution of the 
-#'              run length and data.}
-#'   \item{pars} {A list object. Elements are run length specific summary 
+#'   \item R: A numeric vector object. The current posterior distribution of 
+#'            the run length.
+#'   \item RL: An integer vector object. The current run lengths that are 
+#'             retained.
+#'   \item truncRind: An integer vector object. The indices of the run 
+#'                    lengths retained.
+#'   \item jtR: A numeric vector object. The current joint distribution of the 
+#'              run length and data.
+#'   \item pars: A list object. Elements are run length specific summary 
 #'               statistics and hyperparameters. With the exception of nu, 
 #'               each hyperparameter/summary statistic is a 3 dimensional array, 
 #'               where the final dimension corresponds to the run length. The 
 #'               degrees of freedom, nu, are returned as a vector, of length 
-#'               equal to the number of run lengths retained.}
-#'   \item{cpInds} {An integer matrix object (length(cpthresh) x nRuns). Each 
-#'                 element contains the most recent changepoint.}
-#'   \item{lastLs} {A numeric vector object. Each element contains the 
+#'               equal to the number of run lengths retained.
+#'   \item cpInds: An integer matrix object (length(cpthresh) x nRuns). Each 
+#'                 element contains the most recent changepoint.
+#'   \item lastLs: A numeric vector object. Each element contains the 
 #'                 probability that a change occurred in the previous Lsearch 
-#'                 time points, delayed by cp_delay points.}
-#'   \item{time} {An integer object. The current time.}
-#'   \item{allcov} {A numeric matrix object. The run length dependent covariates
-#'                 for the retained run lengths.}
-#'   \item{model0} {A list object. The initial hyperparameters.}
-#'   \item{lastDataPt} {A numeric vector object. The data of the last time point.}
-#'   \item{call} {The matched call.}
-#'   \item{params} {A list object. The analysis settings.}
+#'                 time points, delayed by cp_delay points.
+#'   \item time: An integer object. The current time.
+#'   \item allcov: A numeric matrix object. The run length dependent covariates
+#'                 for the retained run lengths.
+#'   \item model0: A list object. The initial hyperparameters.
+#'   \item lastDataPt: A numeric vector object. The data of the last time point.
+#'   \item call: The matched call.
+#'   \item params: A list object. The analysis settings.
 #'   }
 #' Conditionally returned elements include:
 #' 
 #' If getR = TRUE
 #'   \itemize{
-#'   \item{RFull} {A numeric matrix object. The ith column contains the run 
-#'                length posterior distribution for time i.}
+#'   \item RFull: A numeric matrix object. The ith column contains the run 
+#'                length posterior distribution for time i.
 #'   }
 #' If getOutliers = TRUE
 #'   \itemize{
-#'     \item{Rm} {A numeric matrix object. The ith column contains the joint 
-#'              distribution of data and run length associated with time-i+1}
-#'     \item{y_store} {A numeric matrix object. Contains the most recent Lm data 
-#'                    points.}
-#'     \item{x_store} {A numeric matrix object. Contains the most recent Lm 
-#'                    covariates.}
-#'     \item{outliers} {An integer vector object. Time points that have been 
-#'                     identified as outliers.}
+#'     \item Rm: A numeric matrix object. The ith column contains the joint 
+#'              distribution of data and run length associated with time-i+1.
+#'     \item y_store: A numeric matrix object. Contains the most recent Lm data 
+#'                    points.
+#'     \item x_store: A numeric matrix object. Contains the most recent Lm 
+#'                    covariates.
+#'     \item outliers: An integer vector object. Time points that have been 
+#'                     identified as outliers.
 #'   }
 #' If getModels = TRUE
 #'   \itemize{
-#'     \item{Rm} {A numeric matrix object. The ith column contains the joint 
-#'              distribution of data and run length associated with time-i+1}
-#'     \item{y_store} {A numeric matrix object. Contains the most recent Lm data 
-#'                    points.}
-#'     \item{x_store} {A numeric matrix object. Contains the most recent Lm 
-#'                    covariates.}
-#'     \item{mods} {A list object. Each element of the list corresponds to an 
+#'     \item Rm: A numeric matrix object. The ith column contains the joint 
+#'              distribution of data and run length associated with time-i+1.
+#'     \item y_store: A numeric matrix object. Contains the most recent Lm data 
+#'                    points.
+#'     \item x_store: A numeric matrix object. Contains the most recent Lm 
+#'                    covariates.
+#'     \item mods: A list object. Each element of the list corresponds to an 
 #'                 identified changepoint. For each changepoint, the expected 
-#'                 model coefficients and covariance. }
-#'     \item{currentModel} {A list object. For the current most likely run length, 
-#'                    the expected model coefficients and covariance.}
+#'                 model coefficients and covariance. 
+#'     \item currentModel: A list object. For the current most likely run length, 
+#'                    the expected model coefficients and covariance.
 #'   }
 #'
 #'
 #' @examples
+#' \dontshow{
+#'   RcppArmadillo::armadillo_throttle_cores(2)
+#' }
 #'
 #'
 #' nt <- 100
@@ -230,6 +233,7 @@
 #' @export
 #' @useDynLib roboBayes
 #' @import Rcpp
+#' @importFrom RcppArmadillo armadillo_throttle_cores
 #' @include checkTypes.R verifyAnalysisSettings.R initRoboBayes.R regressionInit.R
 #' @include RcppExports.R
 
